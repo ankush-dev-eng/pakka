@@ -66,7 +66,7 @@ export default function CommunityPage() {
       ) : error ? (
         <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-red-200 p-8 text-center shadow-sm mb-16">
           <p className="text-[--coral] font-semibold text-lg mb-2">Unable to load community statistics</p>
-          <p className="text-sm text-ink/70 mb-4">We couldn't connect to the statistics service. Please try again.</p>
+          <p className="text-sm text-ink/70 mb-4">We couldn&apos;t connect to the statistics service. Please try again.</p>
           <button
             onClick={() => {
               setLoading(true);

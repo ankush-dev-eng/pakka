@@ -63,7 +63,7 @@ Pakka lets you **paste, upload, or screenshot** any suspicious offer and get bac
 | **Rate limiting** | 10 analyze/min per IP · 5 report/min per IP |
 | **Community stats** | Aggregated counts of scams flagged and top patterns seen |
 | **Framer Motion UI** | Animated hero gradient, staggered card entrances, tab underline spring, animated loading states |
-| **Optional Gemini LLM** | Stub integration ready — disabled by default (mock provider active) |
+| **Mock LLM mode** | Operational default provider with multilingual next-steps (English, Hindi, Bengali) |
 
 ---
 
@@ -73,18 +73,18 @@ Pakka lets you **paste, upload, or screenshot** any suspicious offer and get bac
 flowchart LR
     A([User Input\ntext / PDF / image / URL]) --> B[Next.js 16 UI]
     B --> C[FastAPI /api/analyze]
-    C --> D{Input type?}
     D -- text --> E[Direct text]
     D -- URL --> F[SSRF-safe httpx fetch\n+ BeautifulSoup]
     D -- PDF --> G[pdfplumber]
     D -- image --> H[Tesseract OCR]
     E & F & G & H --> I[Regex entity extraction\nemails · domains · amounts]
     I --> J[12 Deterministic Detectors\nred_flags.yaml]
-    J --> K[Optional LLM\nMock / Gemini]
+    J --> K[LLM Provider\nMockLLMProvider active default]
     K --> L[Grounding validator\nquotes must exist in text]
     J & L --> M[Trust Score engine\nmultiplicative risk model]
     M --> N[(SQLite via SQLModel)]
     N --> O([Result page\nTrust Score · Verdict · Flags · Next Steps])
+    C --> D{Input type?}
 ```
 
 ### Detection pipeline detail
@@ -94,8 +94,8 @@ flowchart LR
 3. **Lookalike domain check** — Rapidfuzz Levenshtein distance ≤ 2 against a list of known legitimate company domains.
 4. **Domain age check** — Domains registered within the last 90 days are flagged.
 5. **Scoring** — Each triggered flag contributes a risk probability `p_i = weight/100`. Final trust = `round(100 × Π(1 – p_i))`, capped to ≤ 25 if `fee_request` or `money_forwarding` fires.
-6. **LLM (optional)** — When `PAKKA_LLM=gemini`, the Gemini provider can surface additional flags; all LLM-sourced quotes are verified against the original text before being accepted.
-7. **Verdict** — `≥ 70` → Looks Pakka · `40–69` → Be Careful · `< 40` → Likely Scam.
+6. **LLM analysis** — The active runtime uses `MockLLMProvider` to generate next steps (and tone checks when simulated). All quotes are verified by the grounding validator against the source text before inclusion. (Note: `GeminiProvider` exists as an experimental class but is not wired into the `/api/analyze` controller).
+7. **Verdict** — `≥ 70` → Looks Pakka · `40–69` → Be Careful · `< 40` → Likely Scam. (Short/meaningless inputs receive `Insufficient Information`).
 
 ---
 

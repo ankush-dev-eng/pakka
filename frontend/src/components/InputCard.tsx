@@ -6,7 +6,7 @@ import { LangSwitch } from "./LangSwitch";
 import { analyzeOffer } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import { Loader2, UploadCloud, X, Link as LinkIcon, FileText, Image as ImageIcon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 type InputMode = "text" | "pdf" | "screenshot" | "link";
 
@@ -46,12 +46,16 @@ export function InputCard() {
       const payload = (mode === "text" || mode === "link") ? content : file!;
       const result = await analyzeOffer(payload, lang, mode, controller.signal);
       router.push(`/result/${result.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      if (err instanceof Error && err.name === "AbortError") {
-        setError("Request timed out. Please try again.");
-      } else if (err?.message) {
-        setError(err.message);
+      if (err instanceof Error) {
+        if (err.name === "AbortError") {
+          setError("Request timed out. Please try again.");
+        } else if (err.message) {
+          setError(err.message);
+        } else {
+          setError("Failed to analyze offer. Please try again.");
+        }
       } else {
         setError("Failed to analyze offer. Please try again.");
       }

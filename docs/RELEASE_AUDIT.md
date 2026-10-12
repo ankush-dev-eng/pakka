@@ -4,7 +4,7 @@
 **Auditor:** Antigravity AI (automated)  
 **Branch:** `master`  
 **Repository:** https://github.com/ankush-dev-eng/pakka
-**Latest verified commit:** `f36f9e9`
+**Latest verified commit:** `0704c05`
 
 ---
 
@@ -28,7 +28,7 @@ Prior to the publish session, **only two files** were tracked in Git:
 - `backend/app/api/analyze.py`
 - `backend/tests/test_api.py`
 
-All other project files were untracked. The entire application was snapshot-committed in `f5e3828` and pushed to GitHub without losing any existing commit history. Subsequently, 13 code review issues across backend and frontend were resolved and verified in commit `f36f9e9`.
+All other project files were untracked. The entire application was snapshot-committed in `f5e3828` and pushed to GitHub without losing any existing commit history. Subsequently, 13 code review issues across backend and frontend were resolved and verified in commit `f36f9e9`. Release documentation, tech stack version constraints, screenshots, and audit trail were reconciled in commit `0704c05`.
 
 ---
 
@@ -46,7 +46,7 @@ All other project files were untracked. The entire application was snapshot-comm
 - No API keys, tokens, passwords, or credentials found in any source file.
 
 ### Secret scan — git history
-- All commits (`c392aff`, `a1e9c22`, `dd31001`, `ff59c44`, `f5e3828`, `f36f9e9`) scanned; no secrets exist in repository history.
+- All commits (`c392aff`, `a1e9c22`, `dd31001`, `ff59c44`, `f5e3828`, `f36f9e9`, `0704c05`) scanned; no secrets exist in repository history.
 
 ### Local runtime artifacts
 - `backend/pakka.db` and root `pakka.db`: SQLite files — excluded by `.gitignore`.
@@ -139,7 +139,7 @@ All other project files were untracked. The entire application was snapshot-comm
 | Report pack | `GET /api/report-pack/{id}` | `test_api.py::test_report_pack` | ✅ Executed & Passed (HTML stub) |
 | TypeScript check | `tsconfig.json` | `npx tsc --noEmit` | ✅ Executed (0 errors) |
 | Next.js production build | `next build` | `npm run build` | ✅ Executed & Passed |
-| Frontend ESLint | `.eslintrc` | `npm run lint` | ⚠️ 2 unescaped quote / any errors in app files |
+| Frontend ESLint | `.eslintrc` / `eslint.config.mjs` | `npm run lint` | ✅ Executed & Passed (0 errors) |
 
 ---
 
@@ -147,7 +147,7 @@ All other project files were untracked. The entire application was snapshot-comm
 
 1. **Gemini LLM Not Wired**: The `/api/analyze` endpoint directly instantiates `llm_provider = MockLLMProvider()`. While `GeminiProvider` exists in `app/llm/gemini.py` with structured output parsing, live Gemini analysis is not wired to runtime dispatch or tested end-to-end. Mock mode is the operational runtime default.
 2. **OCR Pipeline Unverified on Host**: Tesseract OCR is not installed in the current environment (`C:\Program Files\Tesseract-OCR\tesseract.exe` not found). The image extraction unit test was skipped by `pytest`. The OCR path is implemented in code but has not processed a live image in this environment.
-3. **Frontend Lint Warnings**: `npm run lint` flags 2 errors (`react/no-unescaped-entities` in `community/page.tsx` and an explicit `any` in `InputCard.tsx`). Production build (`npm run build`) and TypeScript (`tsc --noEmit`) compile successfully.
+3. **Frontend Lint Errors Resolved**: Previous lint warnings (unescaped apostrophe in `community/page.tsx` and explicit `any` in `InputCard.tsx`) were resolved; `npm run lint` now completes with 0 errors.
 4. **Report Pack Minimal Implementation**: `/api/report-pack/{id}` returns an inline HTML string rather than generating a downloadable PDF document.
 5. **Community Blocklist Scope**: `detect_community_reported` matches against hardcoded test entries (`scammer@scam.com`), not a live dynamic database of reported domains.
 
@@ -161,6 +161,12 @@ All other project files were untracked. The entire application was snapshot-comm
 - **Exit code:** `0`
 - **Results:** **31 passed, 1 skipped, 3 warnings in 8.04s**
 - **Skipped test:** `tests/test_ingest.py::test_extract_image` (Tesseract not installed)
+
+### Frontend ESLint
+- **Command:** `npm run lint`
+- **Working directory:** `frontend/`
+- **Exit code:** `0`
+- **Results:** 0 errors, 0 warnings.
 
 ### Frontend TypeScript
 - **Command:** `npx tsc --noEmit`
@@ -186,3 +192,4 @@ All other project files were untracked. The entire application was snapshot-comm
 | `ff59c44` | `docs(readme): add premium Pakka README with architecture, setup, and API reference` | Comprehensive project README |
 | `f5e3828` | `feat: initial Pakka application snapshot` | Full working application snapshot |
 | `f36f9e9` | `fix: address code review issues across backend and frontend` | Resolution of 13 code review items |
+| `0704c05` | `docs(release): reconcile audit and readme with verified tests, versions, screenshots, and honest limitations` | Release audit, version constraints, screenshots, and scoring reconciliation |
