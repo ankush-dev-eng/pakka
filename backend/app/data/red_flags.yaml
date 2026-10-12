@@ -1,0 +1,52 @@
+fee_request:
+  weight: 70
+  phrases:
+    en: ["registration fee", "security deposit", "refundable deposit", "training fee", "pay the fee", "kit charge", "printing charges", "pay ₹", "through upi"]
+    hi: ["पंजीकरण शुल्क", "सुरक्षा जमा", "प्रशिक्षण शुल्क", "पैसे दें"]
+    bn: ["নিবন্ধন ফি", "নিরাপত্তা জমা", "প্রশিক্ষণ ফি", "টাকা দিন", "taka jama din"]
+free_mail_sender:
+  weight: 50
+lookalike_domain:
+  weight: 65
+new_domain:
+  weight: 50
+no_interview:
+  weight: 60
+  phrases:
+    en: ["no interview", "direct selection", "selected without test", "direct joining", "without an interview"]
+    hi: ["बिना इंटरव्यू", "सीधा चयन", "प्रत्यक्ष जॉइनिंग"]
+    bn: ["কোনো ইন্টারভিউ নেই", "সরাসরি নির্বাচন", "সরাসরি যোগদান"]
+urgency:
+  weight: 25
+  phrases:
+    en: ["within 24 hours", "last chance", "limited seats", "reply immediately", "act now", "apply now", "limited slots", "immediate joining"]
+    hi: ["24 घंटे के भीतर", "अंतिम मौका", "सीमित सीटें", "तुरंत उत्तर दें"]
+    bn: ["24 ঘন্টার মধ্যে", "শেষ সুযোগ", "সীমিত আসন", "অবিলম্বে উত্তর দিন"]
+offchat_only:
+  weight: 35
+  phrases:
+    en: ["contact only via telegram", "whatsapp only", "message us on telegram", "t.me", "on whatsapp", "on telegram", "via telegram"]
+    hi: ["केवल टेलीग्राम", "केवल व्हाट्सएप"]
+    bn: ["শুধুমাত্র টেলিগ্রাম", "শুধুমাত্র হোয়াটসঅ্যাপ"]
+money_forwarding:
+  weight: 90
+  phrases:
+    en: ["forward the money", "test the payment system", "use your bank account", "receive money", "receive payments", "forward them"]
+    hi: ["पैसे आगे भेजें", "भुगतान प्रणाली का परीक्षण", "बैंक खाते का उपयोग"]
+    bn: ["টাকা ফরোয়ার্ড করুন", "পেমেন্ট সিস্টেম পরীক্ষা", "ব্যাঙ্ক অ্যাকাউন্ট ব্যবহার"]
+unrealistic_pay:
+  weight: 30
+certificate_social_demand:
+  weight: 20
+  phrases:
+    en: ["post on linkedin", "tag the company", "pay for completion certificate", "certificate fee"]
+    hi: ["लिंक्डइन पर पोस्ट", "प्रमाणपत्र शुल्क"]
+    bn: ["লিঙ্কডইনে পোস্ট", "সার্টিফিকেট ফি"]
+vague_company:
+  weight: 35
+  phrases:
+    en: ["a leading it company", "a reputed firm", "leading mnc", "new agency", "globaltech", "leading firm", "startup internship"]
+    hi: ["एक प्रमुख आईटी कंपनी", "एक प्रतिष्ठित फर्म"]
+    bn: ["একটি শীর্ষস্থানীয় আইটি কোম্পানি", "একটি স্বনামধন্য সংস্থা"]
+community_reported:
+  weight: 60

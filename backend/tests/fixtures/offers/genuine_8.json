@@ -1,0 +1,7 @@
+{
+  "id": "genuine_8",
+  "text": "Google hiring team. Please fill out the relocation form.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": []
+}

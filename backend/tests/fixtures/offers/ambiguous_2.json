@@ -1,0 +1,9 @@
+{
+  "id": "ambiguous_2",
+  "text": "Startup internship. Stipend 15k. Apply now, limited slots.",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "urgency"
+  ],
+  "must_not_flag": []
+}

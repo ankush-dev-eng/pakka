@@ -1,0 +1,9 @@
+{
+  "id": "ambiguous_4",
+  "text": "New agency hiring for entry-level tasks.",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "vague_company"
+  ],
+  "must_not_flag": []
+}

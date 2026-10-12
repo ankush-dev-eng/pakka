@@ -1,0 +1,10 @@
+{
+  "id": "genuine_3",
+  "text": "Congratulations on your selection for the Infosys internship program. Your stipend will be Rs 25,000 per month.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "unrealistic_pay",
+    "fee_request"
+  ]
+}

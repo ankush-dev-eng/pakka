@@ -1,0 +1,9 @@
+{
+  "id": "scam_telegram",
+  "text": "Hello, I am HR from Amazon. We have a part-time job for you. Contact me on Telegram: @amazon_hr_bot",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "offchat_only"
+  ],
+  "must_not_flag": []
+}

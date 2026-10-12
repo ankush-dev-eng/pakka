@@ -55,7 +55,8 @@ def test_schema_valid():
     assert result.trust == 80
 
 def test_analyze_empty_text(client):
-    response = client.post("/api/analyze", data={"text": "", "lang": "en"})
+    # Sending spaces resolves to a string, but the strip() logic in analyze.py will catch it
+    response = client.post("/api/analyze", data={"text": "   ", "lang": "en"})
     assert response.status_code == 400
     assert "Text cannot be empty" in response.json()["detail"]
 
@@ -86,6 +87,18 @@ def test_analyze_multipart_formdata_regression(client):
     assert response.status_code == 200
     data = response.json()
     assert "id" in data
+
+def test_analyze_conflicting_inputs(client):
+    # Should fail if both text and url are provided
+    response = client.post("/api/analyze", data={"text": "Hello", "url": "http://example.com", "lang": "en"})
+    assert response.status_code == 400
+    assert "Exactly one of text, url, or file must be provided" in response.json()["detail"]
+
+def test_analyze_missing_inputs(client):
+    # Should fail if neither text, url, nor file is provided
+    response = client.post("/api/analyze", data={"lang": "en"})
+    assert response.status_code == 400
+    assert "Exactly one of text, url, or file must be provided" in response.json()["detail"]
 
 def test_get_analysis(client):
     resp1 = client.post("/api/analyze", data={"text": "Hello", "lang": "en"})

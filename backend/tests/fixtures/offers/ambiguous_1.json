@@ -1,0 +1,11 @@
+{
+  "id": "ambiguous_1",
+  "text": "We are a startup looking for interns. Send your CV to my personal email john.doe@gmail.com.",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "free_mail_sender"
+  ],
+  "must_not_flag": [
+    "fee_request"
+  ]
+}

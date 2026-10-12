@@ -1,0 +1,10 @@
+{
+  "id": "scam_unrealistic",
+  "text": "Data Entry Operator required. Fresher CTC: 45 LPA. Work from home. No interview required.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "unrealistic_pay",
+    "no_interview"
+  ],
+  "must_not_flag": []
+}

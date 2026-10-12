@@ -1,0 +1,9 @@
+{
+  "id": "genuine_5",
+  "text": "Your interview for the Data Scientist role at Amazon is confirmed.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "no_interview"
+  ]
+}

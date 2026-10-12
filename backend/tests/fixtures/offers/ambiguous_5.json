@@ -1,0 +1,10 @@
+{
+  "id": "ambiguous_5",
+  "text": "Opportunity for freshers in a leading firm. Immediate joining.",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "vague_company",
+    "urgency"
+  ],
+  "must_not_flag": []
+}

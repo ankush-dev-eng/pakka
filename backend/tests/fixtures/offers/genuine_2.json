@@ -1,0 +1,10 @@
+{
+  "id": "genuine_2",
+  "text": "TCS Off-Campus Drive: Your interview is scheduled for tomorrow at 10 AM. Please join via the official WebEx link.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "fee_request",
+    "no_interview"
+  ]
+}

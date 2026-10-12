@@ -1,0 +1,9 @@
+{
+  "id": "scam_lookalike",
+  "text": "You are selected for Google. Click here to claim your offer: http://g00gle.com/offer",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "lookalike_domain"
+  ],
+  "must_not_flag": []
+}

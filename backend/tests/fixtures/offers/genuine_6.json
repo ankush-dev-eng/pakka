@@ -1,0 +1,9 @@
+{
+  "id": "genuine_6",
+  "text": "IBM recruitment team. We are offering you a position after clearing the 3 rounds of technical interviews.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "no_interview"
+  ]
+}

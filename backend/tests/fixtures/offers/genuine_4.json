@@ -1,0 +1,9 @@
+{
+  "id": "genuine_4",
+  "text": "Wipro HR: Please complete your background verification documents and upload them to our portal.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "vague_company"
+  ]
+}

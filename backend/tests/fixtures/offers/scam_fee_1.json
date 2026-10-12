@@ -1,0 +1,9 @@
+{
+  "id": "scam_fee_1",
+  "text": "Congratulations! You have been selected for the internship at TechCorp. Please pay a refundable security deposit of Rs 2000 to our UPI ID hr@techcorp to confirm your seat.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "fee_request"
+  ],
+  "must_not_flag": []
+}

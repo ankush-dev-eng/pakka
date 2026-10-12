@@ -1,0 +1,18 @@
+ui:
+  title: "Pakka"
+  subtitle: "Verify messages & calls"
+  analyze_btn: "Analyze"
+  verdict_looks_pakka: "Looks Pakka"
+  verdict_be_careful: "Be Careful"
+  verdict_likely_scam: "Likely Scam"
+  report_pack_btn: "Generate Report Pack"
+
+flags:
+  urgent_action: "Urgent Action Demanded"
+  fee_request: "Fee Request"
+  unprofessional_tone: "Unprofessional Tone"
+  lookalike_domain: "Suspicious Domain"
+
+next_steps:
+  verify_source: "Verify the sender through official channels."
+  do_not_pay: "Do not pay any requested fees."

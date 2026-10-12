@@ -1,0 +1,10 @@
+{
+  "id": "scam_free_email",
+  "text": "We are hiring freshers for Software Engineer at GlobalTech. Send your resume to globaltech.hr123@gmail.com.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "free_mail_sender",
+    "vague_company"
+  ],
+  "must_not_flag": []
+}

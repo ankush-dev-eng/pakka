@@ -1,0 +1,9 @@
+{
+  "id": "scam_hindi",
+  "text": "Aapki naukri pakki ho gayi hai. 5000 rupaye registration fee jama karein.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "fee_request"
+  ],
+  "must_not_flag": []
+}

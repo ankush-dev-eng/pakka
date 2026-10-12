@@ -1,0 +1,9 @@
+{
+  "id": "scam_money_forwarding",
+  "text": "Your job is to receive payments into your bank account and forward them to our suppliers. You keep 10% commission.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "money_forwarding"
+  ],
+  "must_not_flag": []
+}

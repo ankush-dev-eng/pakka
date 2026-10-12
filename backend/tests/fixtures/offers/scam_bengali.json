@@ -1,0 +1,9 @@
+{
+  "id": "scam_bengali",
+  "text": "Apnar chakri confirm. Training er jonno 1000 taka jama din.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "fee_request"
+  ],
+  "must_not_flag": []
+}

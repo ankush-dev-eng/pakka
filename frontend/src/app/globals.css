@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0B1030;
+  --indigo: #1D2B73;
+  --paper: #F4F7FD;
+  --white: #FFFFFF;
+  --blue: #3B5BDB;
+  --teal: #0E8F83;
+  --amber: #E08A00;
+  --coral: #DC3F55;
+  --violet: #7C5CFA;
+  --border: #B9CCE6;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-indigo: var(--indigo);
+  --color-paper: var(--paper);
+  --color-white: var(--white);
+  --color-blue: var(--blue);
+  --color-teal: var(--teal);
+  --color-amber: var(--amber);
+  --color-coral: var(--coral);
+  --color-violet: var(--violet);
+  --color-border: var(--border);
+  
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-devanagari: var(--font-noto-devanagari);
+  --font-bengali: var(--font-noto-bengali);
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter), sans-serif;
+}

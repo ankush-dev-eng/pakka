@@ -1,0 +1,9 @@
+{
+  "id": "scam_new_domain",
+  "text": "Welcome to FutureTech Innovations. Visit our website at futuretech-innovations-2026.com",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "new_domain"
+  ],
+  "must_not_flag": []
+}

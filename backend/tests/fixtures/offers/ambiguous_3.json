@@ -1,0 +1,9 @@
+{
+  "id": "ambiguous_3",
+  "text": "Are you looking for an internship? DM me on WhatsApp.",
+  "expected_verdict": "be_careful",
+  "must_flag": [
+    "offchat_only"
+  ],
+  "must_not_flag": []
+}

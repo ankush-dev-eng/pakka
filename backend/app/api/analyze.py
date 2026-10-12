@@ -43,20 +43,39 @@ async def analyze_text(
 ):
     extracted_text = ""
     
-    if text:
+    # Removed debug print to avoid UnicodeEncodeError
+    inputs_provided = sum([text is not None, url is not None, file is not None])
+    if inputs_provided != 1:
+        raise HTTPException(status_code=400, detail="Exactly one of text, url, or file must be provided")
+
+    if text is not None:
         extracted_text = text
-    elif url:
+    elif url is not None:
         try:
-            # SSRF protection
-            parsed = urllib.parse.urlparse(url)
-            if parsed.scheme not in ("http", "https"):
-                raise HTTPException(status_code=400, detail="Invalid URL scheme")
-            
-            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-                resp = await client.get(url)
-                resp.raise_for_status()
-                soup = BeautifulSoup(resp.text, "html.parser")
-                extracted_text = soup.get_text(separator=" ", strip=True)
+            from app.ingest.url_fetch import (
+                fetch_url_text,
+                TargetAccessDeniedError,
+                TargetNotFoundError,
+                RequestTimeoutError,
+                SSRFError,
+                FetchError
+            )
+            content = await fetch_url_text(url)
+            soup = BeautifulSoup(content, "html.parser")
+            extracted_text = soup.get_text(separator=" ", strip=True)
+        except TargetAccessDeniedError as e:
+            raise HTTPException(
+                status_code=403,
+                detail=f"Target website blocked access: {str(e)} Please paste the offer text directly or upload a screenshot/PDF."
+            )
+        except TargetNotFoundError as e:
+            raise HTTPException(status_code=404, detail=f"Target URL not found: {str(e)}")
+        except RequestTimeoutError as e:
+            raise HTTPException(status_code=504, detail=f"Target URL timed out: {str(e)}")
+        except SSRFError as e:
+            raise HTTPException(status_code=400, detail=f"Invalid URL: {str(e)}")
+        except FetchError as e:
+            raise HTTPException(status_code=400, detail=f"Failed to fetch URL: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Failed to fetch URL: {str(e)}")
     elif file:
@@ -66,8 +85,8 @@ async def analyze_text(
                 with pdfplumber.open(io.BytesIO(content_bytes)) as pdf:
                     extracted_text = " ".join([page.extract_text() or "" for page in pdf.pages])
             elif file.filename.lower().endswith((".png", ".jpg", ".jpeg")):
-                img = Image.open(io.BytesIO(content_bytes))
-                extracted_text = pytesseract.image_to_string(img)
+                from app.ingest.image_ocr import extract_image_text
+                extracted_text = extract_image_text(content_bytes)
             else:
                 raise HTTPException(status_code=400, detail="Unsupported file format")
         except Exception as e:
@@ -122,16 +141,32 @@ async def analyze_text(
             amounts.append(int(val))
         except ValueError:
             pass
-        
+            
+    # Check for daily/weekly/monthly rates and annualize them for unrealistic_pay detection
+    rate_matches = re.findall(r'\b(\d+(?:,\d+)*(?:\.\d+)?)\s*(?:/|per|a)\s*(day|week|month)\b', req_text, flags=re.IGNORECASE)
+    for m in rate_matches:
+        try:
+            val = float(m[0].replace(',', ''))
+            period = m[1].lower()
+            if period == 'day':
+                val = val * 260 # Assuming 260 working days
+            elif period == 'week':
+                val = val * 52
+            elif period == 'month':
+                val = val * 12
+            amounts.append(int(val))
+        except ValueError:
+            pass
+            
     # 1. Rule-based detection
-    from app.intel.detectors import run_all_detectors, load_red_flags, RED_FLAGS
-    load_red_flags()
-    raw_flags = await run_all_detectors(req_text, domains, amounts, senders)
+    import app.intel.detectors as detectors
+    detectors.load_red_flags()
+    raw_flags = await detectors.run_all_detectors(req_text, domains, amounts, senders)
     
     rule_flags = []
     for flag_id, triggered in raw_flags.items():
         if triggered:
-            weight = RED_FLAGS.get(flag_id, {}).get("weight", 10)
+            weight = detectors.RED_FLAGS.get(flag_id, {}).get("weight", 10)
             rule_flags.append({
                 "id": flag_id,
                 "title": flag_id.replace("_", " ").title(),
@@ -145,7 +180,26 @@ async def analyze_text(
     valid_llm_flags = validate_grounding(req_text, llm_resp.get("new_flags", []))
     
     # 3. Combine flags & calculate score
-    score, verdict = calculate_score(raw_flags, valid_llm_flags)
+    job_keywords = {"job", "offer", "interview", "salary", "pay", "work", "hire", "hired", "hiring", "apply", "selected", "resume", "cv", "lpa", "rupees", "position", "company", "fee", "stipend", "payment", "₹", "rs"}
+    
+    word_count = len(req_text.split())
+    import re
+    has_keywords = any(re.search(rf'\b{re.escape(kw)}\b', req_text.lower()) if kw.isalpha() else (kw in req_text.lower()) for kw in job_keywords)
+    
+    has_signals = any(raw_flags.values()) or bool(domains) or bool(amounts) or bool(senders) or has_keywords
+    
+    is_meaningful = False
+    if word_count >= 10:
+        is_meaningful = True
+    elif word_count >= 3 and has_signals:
+        is_meaningful = True
+    if any(raw_flags.values()):
+        is_meaningful = True
+    
+    if not is_meaningful:
+        score, verdict = 0, "insufficient_information"
+    else:
+        score, verdict = calculate_score(raw_flags, valid_llm_flags)
     
     # 4. Save to DB
     record = AnalysisRecord(
@@ -201,10 +255,24 @@ def generate_report_pack(id: str, session: Session = Depends(get_session)):
 
 @router.get("/stats")
 def get_stats(session: Session = Depends(get_session)):
-    # Simple stats for demo
     total_analyzed = session.exec(select(AnalysisRecord)).all()
-    scams = [r for r in total_analyzed if r.verdict == "likely_scam"]
+    scams = [r for r in total_analyzed if r.verdict == "likely_scam" or r.reported_scam]
+    
+    from collections import Counter
+    pattern_counts = Counter()
+    for r in total_analyzed:
+        if r.verdict == "likely_scam" or r.reported_scam:
+            for flag in r.flags:
+                if flag.get("title"):
+                    pattern_counts[flag["title"]] += 1
+            for flag in r.llm_flags:
+                if flag.get("title"):
+                    pattern_counts[flag["title"]] += 1
+                
+    top_patterns = [{"name": title, "count": count} for title, count in pattern_counts.most_common(3)]
+    
     return {
         "total_analyzed": len(total_analyzed),
-        "likely_scams": len(scams)
+        "likely_scams": len(scams),
+        "top_patterns": top_patterns
     }

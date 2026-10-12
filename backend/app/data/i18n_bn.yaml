@@ -1,0 +1,18 @@
+ui:
+  title: "পাক্কা"
+  subtitle: "বার্তা এবং কল যাচাই করুন"
+  analyze_btn: "বিশ্লেষণ করুন"
+  verdict_looks_pakka: "পাক্কা মনে হচ্ছে"
+  verdict_be_careful: "সাবধান থাকুন"
+  verdict_likely_scam: "সম্ভাব্য কেলেঙ্কারি"
+  report_pack_btn: "রিপোর্ট প্যাক তৈরি করুন"
+
+flags:
+  urgent_action: "জরুরী পদক্ষেপের দাবি"
+  fee_request: "ফি অনুরোধ"
+  unprofessional_tone: "অপেশাদার সুর"
+  lookalike_domain: "সন্দেহজনক ডোমেন"
+
+next_steps:
+  verify_source: "অফিসিয়াল চ্যানেলের মাধ্যমে প্রেরক যাচাই করুন।"
+  do_not_pay: "কোনো অনুরোধকৃত ফি প্রদান করবেন না।"

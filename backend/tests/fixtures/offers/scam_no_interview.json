@@ -1,0 +1,10 @@
+{
+  "id": "scam_no_interview",
+  "text": "You are selected without an interview based on your profile. Reply immediately to claim the offer.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "no_interview",
+    "urgency"
+  ],
+  "must_not_flag": []
+}

@@ -1,0 +1,18 @@
+ui:
+  title: "पक्का"
+  subtitle: "संदेश और कॉल सत्यापित करें"
+  analyze_btn: "विश्लेषण करें"
+  verdict_looks_pakka: "पक्का लगता है"
+  verdict_be_careful: "सावधान रहें"
+  verdict_likely_scam: "संभावित घोटाला"
+  report_pack_btn: "रिपोर्ट पैक बनाएं"
+
+flags:
+  urgent_action: "तत्काल कार्रवाई की मांग"
+  fee_request: "शुल्क अनुरोध"
+  unprofessional_tone: "अव्यावसायिक लहजा"
+  lookalike_domain: "संदिग्ध डोमेन"
+
+next_steps:
+  verify_source: "आधिकारिक चैनलों के माध्यम से प्रेषक को सत्यापित करें।"
+  do_not_pay: "कोई भी मांगा गया शुल्क न दें।"

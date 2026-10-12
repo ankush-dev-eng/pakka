@@ -1,0 +1,9 @@
+{
+  "id": "scam_community",
+  "text": "Join our network scheme and earn 10,000 per day. Email us at scammer123@scam.com",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "community_reported"
+  ],
+  "must_not_flag": []
+}

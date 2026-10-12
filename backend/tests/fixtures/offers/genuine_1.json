@@ -1,0 +1,12 @@
+{
+  "id": "genuine_1",
+  "text": "Dear candidate, we are pleased to offer you the role of SDE at Microsoft. Please review the attached offer letter and sign. Contact hr@microsoft.com for queries.",
+  "expected_verdict": "looks_pakka",
+  "must_flag": [],
+  "must_not_flag": [
+    "free_mail_sender",
+    "lookalike_domain",
+    "fee_request",
+    "no_interview"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "scam_cert_fee",
+  "text": "To get your completion certificate, you must pay Rs 500 for printing charges.",
+  "expected_verdict": "likely_scam",
+  "must_flag": [
+    "fee_request"
+  ],
+  "must_not_flag": []
+}
