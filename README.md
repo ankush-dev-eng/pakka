@@ -242,7 +242,7 @@ uvicorn app.main:app --reload --port 8000
 
 The API will be available at `http://localhost:8000`. Interactive docs at `http://localhost:8000/docs`.
 
-> **Working default:** The backend uses `MockLLMProvider` as the operational runtime default. In `app/api/analyze.py`, the analysis pipeline directly instantiates `MockLLMProvider()`. While a `GeminiProvider` class exists in `app/llm/gemini.py` with structured output parsing, live Gemini analysis is not currently wired into the endpoint dispatch or tested end-to-end. Mock mode remains the working default without requiring external API keys.
+> **Operational LLM provider:** Mock mode (`MockLLMProvider`) is the **only verified operational provider**. The `/api/analyze` endpoint directly instantiates `MockLLMProvider()` and does not dispatch to live LLM services. A `GeminiProvider` class exists in `app/llm/gemini.py`, but it is **not wired** into the live API controller. Setting `PAKKA_LLM=gemini` does not activate live Gemini analysis or provide additional flags. Mock mode is the only working and verified provider, requiring zero external API keys.
 
 ---
 
@@ -266,9 +266,9 @@ The UI will be available at `http://localhost:3000`.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PAKKA_LLM` | `mock` | LLM provider: `mock` (active default) or `gemini` (experimental / not wired to analyze endpoint) |
-| `GEMINI_API_KEY` | _(empty)_ | Not required for default mock runtime. Set only when developing Gemini integration |
-| `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model identifier |
+| `PAKKA_LLM` | `mock` | Operational LLM provider. Mock mode (`mock`) is the **only verified operational provider**. `GeminiProvider` is not wired into `/api/analyze`; setting `PAKKA_LLM=gemini` does not activate live Gemini analysis. |
+| `GEMINI_API_KEY` | _(empty)_ | Unused in live analysis. Setting this key does not enable Gemini analysis because the API endpoint directly instantiates `MockLLMProvider`. |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | Unused in the operational runtime. |
 | `DATABASE_URL` | `sqlite:///./pakka.db` | SQLite database path |
 | `BACKEND_CORS_ORIGINS` | `["http://localhost:3000"]` | Allowed frontend origins |
 | `TESSERACT_PATH` | _(auto-detected)_ | Override Tesseract binary path |
@@ -338,6 +338,8 @@ curl -X POST http://localhost:8000/api/analyze \
   "created_at": "2026-10-12T08:41:00Z"
 }
 ```
+
+> **Scoring & Cap Note:** Mathematically, a single rule with weight 70 yields trust `round(100 × (1 – 0.70)) = 30`. However, because `fee_request` is triggered, the hard floor cap of `trust = min(trust, 25)` applies in `calculate_score()`. The final Trust Score is therefore `25`, mapping to verdict `"likely_scam"` (< 40).
 
 ---
 

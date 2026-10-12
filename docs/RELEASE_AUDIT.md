@@ -1,10 +1,11 @@
 # Pakka — Release Audit
 
-**Audit date:** 2026-10-12  
-**Auditor:** Antigravity AI (automated)  
-**Branch:** `master`  
-**Repository:** https://github.com/ankush-dev-eng/pakka
-**Latest verified commit:** `0704c05`
+**Audit date:** 2026-10-12<br/>
+**Auditor:** Antigravity AI (automated)<br/>
+**Branch:** `master`<br/>
+**Repository:** https://github.com/ankush-dev-eng/pakka<br/>
+**Audit verification baseline:** `0704c05`<br/>
+**Subsequent cleanup commit:** `1006258`
 
 ---
 
@@ -28,7 +29,7 @@ Prior to the publish session, **only two files** were tracked in Git:
 - `backend/app/api/analyze.py`
 - `backend/tests/test_api.py`
 
-All other project files were untracked. The entire application was snapshot-committed in `f5e3828` and pushed to GitHub without losing any existing commit history. Subsequently, 13 code review issues across backend and frontend were resolved and verified in commit `f36f9e9`. Release documentation, tech stack version constraints, screenshots, and audit trail were reconciled in commit `0704c05`.
+All other project files were untracked. The entire application was snapshot-committed in `f5e3828` and pushed to GitHub without losing any existing commit history. Subsequently, 13 code review issues across backend and frontend were resolved and verified in commit `f36f9e9`. Release documentation, tech stack version constraints, screenshots, and audit trail were reconciled in commit `0704c05` (the verified audit baseline). Subsequent cleanup commit `1006258` addressed frontend lint errors (`community/page.tsx`, `InputCard.tsx`) and clarified mock LLM defaults in documentation without modifying backend detection logic.
 
 ---
 
@@ -46,7 +47,7 @@ All other project files were untracked. The entire application was snapshot-comm
 - No API keys, tokens, passwords, or credentials found in any source file.
 
 ### Secret scan — git history
-- All commits (`c392aff`, `a1e9c22`, `dd31001`, `ff59c44`, `f5e3828`, `f36f9e9`, `0704c05`) scanned; no secrets exist in repository history.
+- All commits (`c392aff`, `a1e9c22`, `dd31001`, `ff59c44`, `f5e3828`, `f36f9e9`, `0704c05`, `1006258`) scanned; no secrets exist in repository history.
 
 ### Local runtime artifacts
 - `backend/pakka.db` and root `pakka.db`: SQLite files — excluded by `.gitignore`.
@@ -192,4 +193,5 @@ All other project files were untracked. The entire application was snapshot-comm
 | `ff59c44` | `docs(readme): add premium Pakka README with architecture, setup, and API reference` | Comprehensive project README |
 | `f5e3828` | `feat: initial Pakka application snapshot` | Full working application snapshot |
 | `f36f9e9` | `fix: address code review issues across backend and frontend` | Resolution of 13 code review items |
-| `0704c05` | `docs(release): reconcile audit and readme with verified tests, versions, screenshots, and honest limitations` | Release audit, version constraints, screenshots, and scoring reconciliation |
+| `0704c05` | `docs(release): reconcile audit and readme with verified tests, versions, screenshots, and honest limitations` | Release audit verification baseline (versions, screenshots, scoring reconciliation) |
+| `1006258` | `docs(release): reconcile release audit, clarify mock LLM default, and fix frontend lint errors` | Subsequent cleanup commit (frontend lint resolution and mock LLM documentation) |
