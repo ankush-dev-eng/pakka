@@ -18,6 +18,7 @@ dependencies = [
     "slowapi>=0.1.9",
     "uvicorn>=0.29.0",
     "beautifulsoup4>=4.12.3",
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]

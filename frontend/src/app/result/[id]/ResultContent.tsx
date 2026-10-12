@@ -28,20 +28,41 @@ export default function ResultContent() {
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
+    let animationControls: { stop: () => void } | null = null;
     const analysisId = Array.isArray(id) ? id[0] : id;
+
     getAnalysis(analysisId, lang)
       .then((res) => {
+        if (cancelled) return;
         setData(res);
-        animate(0, res.score, {
+        animationControls = animate(0, res.score, {
           duration: 1,
           ease: "easeOut",
           onUpdate(value) {
-            setDisplayScore(Math.round(value));
+            if (!cancelled) {
+              setDisplayScore(Math.round(value));
+            }
           }
         });
       })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (!cancelled) {
+          console.error(err);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      if (animationControls) {
+        animationControls.stop();
+      }
+    };
   }, [id, lang]);
 
   if (loading) {
@@ -66,6 +87,7 @@ export default function ResultContent() {
       case "looks_pakka": return "text-teal";
       case "be_careful": return "text-amber";
       case "likely_scam": return "text-coral";
+      case "insufficient_information": return "text-amber";
       default: return "text-indigo";
     }
   };
@@ -75,6 +97,7 @@ export default function ResultContent() {
       case "looks_pakka": return <ShieldCheck className="w-6 h-6 text-teal" />;
       case "be_careful": return <AlertTriangle className="w-6 h-6 text-amber" />;
       case "likely_scam": return <ShieldAlert className="w-6 h-6 text-coral" />;
+      case "insufficient_information": return <AlertTriangle className="w-6 h-6 text-amber" />;
       default: return null;
     }
   };
@@ -180,7 +203,7 @@ export default function ResultContent() {
             <div className="mt-auto pt-6 border-t border-border">
               <h3 className="font-bold text-ink mb-3">{t.nextSteps}</h3>
               <ul className="list-disc list-inside text-sm text-indigo mb-4 flex flex-col gap-1">
-                {(t.defaultNextSteps || data.next_steps)?.map((step: string, i: number) => (
+                {((data.next_steps && data.next_steps.length > 0) ? data.next_steps : t.defaultNextSteps)?.map((step: string, i: number) => (
                   <li key={i}>{step}</li>
                 ))}
               </ul>

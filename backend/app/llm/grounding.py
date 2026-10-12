@@ -18,10 +18,23 @@ def validate_grounding(text: str, llm_flags: List[Dict[str, Any]]) -> List[Dict[
             is_valid = False
         else:
             for ev in evidence:
-                quote = ev.get("quote", "").lower()
-                if quote not in text_lower:
+                quote = ev.get("quote", "")
+                if not quote:
                     is_valid = False
                     break
+                quote_lower = quote.lower()
+                if quote_lower not in text_lower:
+                    is_valid = False
+                    break
+                start = ev.get("start")
+                end = ev.get("end")
+                if start is not None and end is not None:
+                    if not (0 <= start < end <= len(text)):
+                        is_valid = False
+                        break
+                    if text[start:end] != quote and text[start:end].lower() != quote_lower:
+                        is_valid = False
+                        break
                     
         if is_valid:
             valid_flags.append(flag)
@@ -38,8 +51,9 @@ def validate_grounding(text: str, llm_flags: List[Dict[str, Any]]) -> List[Dict[
             # If adding this flag exceeds 10, adjust its weight
             allowed_weight = 10 - total_weight
             if allowed_weight > 0:
-                flag["weight"] = allowed_weight
-                final_flags.append(flag)
+                flag_copy = dict(flag)
+                flag_copy["weight"] = allowed_weight
+                final_flags.append(flag_copy)
                 total_weight += allowed_weight
             # Stop adding flags once we hit 10
             if total_weight >= 10:

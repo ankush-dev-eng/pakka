@@ -52,14 +52,29 @@ class GeminiProvider(LLMProvider):
         Ensure all quotes are exactly from the text.
         """
         
-        # In a real app we'd use Structured Outputs properly:
-        # response = self.client.models.generate_content(
-        #     model=self.model,
-        #     contents=prompt,
-        #     config=genai.types.GenerateContentConfig(
-        #         response_mime_type="application/json",
-        #         response_schema=LLMResponse,
-        #     ),
-        # )
-        
+        try:
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=prompt,
+                config=genai.types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=LLMResponse,
+                ),
+            )
+            if hasattr(response, "parsed") and response.parsed:
+                parsed = response.parsed
+                if hasattr(parsed, "model_dump"):
+                    return parsed.model_dump()
+                elif hasattr(parsed, "dict"):
+                    return parsed.dict()
+            if getattr(response, "text", None):
+                data = json.loads(response.text)
+                if isinstance(data, dict):
+                    return {
+                        "new_flags": data.get("new_flags", []),
+                        "next_steps": data.get("next_steps", ["Verify carefully"]),
+                    }
+        except Exception:
+            pass
+
         return {"new_flags": [], "next_steps": ["Verify carefully"]}

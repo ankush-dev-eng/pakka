@@ -32,7 +32,7 @@ class AnalysisResult(BaseModel):
     input_kind: Literal["text", "pdf", "image", "url"]
     text: str
     trust: int
-    verdict: Literal["looks_pakka", "be_careful", "likely_scam"]
+    verdict: Literal["looks_pakka", "be_careful", "likely_scam", "insufficient_information"]
     flags: List[Flag] = []
     entities: Entities = Field(default_factory=Entities)
     next_steps: List[str] = []

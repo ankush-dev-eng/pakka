@@ -74,7 +74,8 @@ const translations = {
     verdicts: {
       "looks_pakka": "Looks Pakka",
       "be_careful": "Be Careful",
-      "likely_scam": "Likely Scam"
+      "likely_scam": "Likely Scam",
+      "insufficient_information": "Insufficient Information"
     },
     flags: {
       "fee_request": { title: "Fee Request", reason: "The offer asks for an upfront payment or fee." },
@@ -136,7 +137,8 @@ const translations = {
     verdicts: {
       "looks_pakka": "सही लगता है",
       "be_careful": "सावधान रहें",
-      "likely_scam": "संभावित घोटाला"
+      "likely_scam": "संभावित घोटाला",
+      "insufficient_information": "अपर्याप्त जानकारी"
     },
     flags: {
       "fee_request": { title: "शुल्क का अनुरोध", reason: "ऑफर में अग्रिम भुगतान या शुल्क मांगा गया है।" },
@@ -198,7 +200,8 @@ const translations = {
     verdicts: {
       "looks_pakka": "সঠিক মনে হচ্ছে",
       "be_careful": "সতর্ক থাকুন",
-      "likely_scam": "সম্ভাব্য প্রতারণা"
+      "likely_scam": "সম্ভাব্য প্রতারণা",
+      "insufficient_information": "অপর্যাপ্ত তথ্য"
     },
     flags: {
       "fee_request": { title: "ফি অনুরোধ", reason: "অফারে অগ্রিম পেমেন্ট বা ফি চাওয়া হয়েছে।" },

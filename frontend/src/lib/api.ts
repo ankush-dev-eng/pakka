@@ -25,14 +25,26 @@ export async function analyzeOffer(
   if (!response.ok) {
     let detail = "Failed to analyze offer";
     try {
-      const errJson = await response.json();
-      detail = errJson.detail || detail;
-    } catch {
       const rawText = await response.text();
-      if (rawText) detail = rawText;
+      if (rawText) {
+        try {
+          const errJson = JSON.parse(rawText);
+          if (errJson && errJson.detail !== undefined) {
+            detail = typeof errJson.detail === "string"
+              ? errJson.detail
+              : JSON.stringify(errJson.detail);
+          } else {
+            detail = rawText;
+          }
+        } catch {
+          detail = rawText;
+        }
+      }
+    } catch {
+      // Keep default detail
     }
     const err = new Error(detail);
-    (err as any).status = response.status;
+    (err as Error & { status?: number }).status = response.status;
     throw err;
   }
   return response.json();
