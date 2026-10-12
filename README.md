@@ -39,6 +39,17 @@ Pakka lets you **paste, upload, or screenshot** any suspicious offer and get bac
 
 ---
 
+## 📸 Screenshots
+
+| View | Desktop (1440×900) | Mobile (375×812) |
+|------|-------------------|------------------|
+| **Home & Input Card** | ![Home Desktop](docs/assets/home-desktop-1440x900.png) | ![Home Mobile](docs/assets/home-mobile-375x812.png) |
+| **Analysis Result** | ![Result Desktop](docs/assets/result-desktop-1440x900.png) | ![Result Mobile](docs/assets/result-mobile-375x812.png) |
+| **Community Safety** | ![Community Desktop](docs/assets/community-desktop-1440x900.png) | ![Community Mobile](docs/assets/community-mobile-375x812.png) |
+| **About Pakka** | ![About Desktop](docs/assets/about-desktop-1440x900.png) | ![About Mobile](docs/assets/about-mobile-375x812.png) |
+
+---
+
 ## ✨ Features
 
 | Feature | Details |
@@ -158,25 +169,27 @@ pakka/
 
 ## 🖥️ Tech Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| **Frontend framework** | Next.js (App Router) | 16.4 |
-| **UI language** | TypeScript | 5 |
-| **Styling** | Tailwind CSS | 4 |
-| **Animations** | Framer Motion | 14 |
-| **Icons** | lucide-react | 1.54 |
-| **Backend framework** | FastAPI | 0.111 |
-| **Runtime** | Python | 3.11+ |
-| **Database ORM** | SQLModel + SQLite | 0.0.18 |
-| **HTTP client** | httpx | 0.27 |
-| **PDF extraction** | pdfplumber | 0.11 |
-| **OCR** | pytesseract + Pillow | 0.3.10 / 10.3 |
-| **String matching** | rapidfuzz | 3.9 |
-| **Rate limiting** | slowapi | 0.1.9 |
-| **HTML parsing** | beautifulsoup4 | 4.12 |
-| **Config** | pydantic-settings | 2.2 |
-| **E2E testing** | Playwright | 1.64 |
-| **Backend testing** | pytest + pytest-asyncio | 8.2 / 0.23 |
+| Layer | Technology | Declared Version / Constraint |
+|-------|-----------|-------------------------------|
+| **Frontend framework** | Next.js (App Router) | `16.4.0` |
+| **UI library** | React / React DOM | `19.3.0` |
+| **UI language** | TypeScript | `^5` |
+| **Styling** | Tailwind CSS | `^4` (`@tailwindcss/turbopack ^4`) |
+| **Animations** | Framer Motion | `^14.0.0` |
+| **Icons** | lucide-react | `^1.54.0` |
+| **Backend framework** | FastAPI | `>=0.111.0` |
+| **Runtime** | Python | `>=3.11` |
+| **Database ORM** | SQLModel + SQLite | `>=0.0.18` |
+| **HTTP client** | httpx | `>=0.27.0` |
+| **PDF extraction** | pdfplumber | `>=0.11.0` |
+| **OCR** | pytesseract + Pillow | `>=0.3.10` / `>=10.3.0` |
+| **String matching** | rapidfuzz | `>=3.9.1` |
+| **Rate limiting** | slowapi | `>=0.1.9` |
+| **HTML parsing** | beautifulsoup4 | `>=4.12.3` |
+| **Multipart parsing** | python-multipart | `>=0.0.9` |
+| **Config** | pydantic-settings | `>=2.2.1` |
+| **E2E testing** | Playwright | `^1.64.0` |
+| **Backend testing** | pytest + pytest-asyncio | `>=8.2.0` / `>=0.23.6` |
 
 ---
 
@@ -229,7 +242,7 @@ uvicorn app.main:app --reload --port 8000
 
 The API will be available at `http://localhost:8000`. Interactive docs at `http://localhost:8000/docs`.
 
-> **Default mode:** The backend uses a **mock LLM provider** — no API keys are needed. To use Gemini, set `PAKKA_LLM=gemini` and `GEMINI_API_KEY=<your-key>` in your `.env`.
+> **Working default:** The backend uses `MockLLMProvider` as the operational runtime default. In `app/api/analyze.py`, the analysis pipeline directly instantiates `MockLLMProvider()`. While a `GeminiProvider` class exists in `app/llm/gemini.py` with structured output parsing, live Gemini analysis is not currently wired into the endpoint dispatch or tested end-to-end. Mock mode remains the working default without requiring external API keys.
 
 ---
 
@@ -253,8 +266,8 @@ The UI will be available at `http://localhost:3000`.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PAKKA_LLM` | `mock` | LLM provider: `mock` or `gemini` |
-| `GEMINI_API_KEY` | _(empty)_ | Required only when `PAKKA_LLM=gemini` |
+| `PAKKA_LLM` | `mock` | LLM provider: `mock` (active default) or `gemini` (experimental / not wired to analyze endpoint) |
+| `GEMINI_API_KEY` | _(empty)_ | Not required for default mock runtime. Set only when developing Gemini integration |
 | `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model identifier |
 | `DATABASE_URL` | `sqlite:///./pakka.db` | SQLite database path |
 | `BACKEND_CORS_ORIGINS` | `["http://localhost:3000"]` | Allowed frontend origins |
@@ -302,9 +315,9 @@ curl -X POST http://localhost:8000/api/analyze \
 ```json
 {
   "id": "uuid-here",
-  "text": "Pay ₹2000 registration fee...",
+  "text": "Pay ₹2000 registration fee via UPI to proceed with selection.",
   "lang": "en",
-  "score": 22,
+  "score": 25,
   "verdict": "likely_scam",
   "flags": [
     {
@@ -316,7 +329,10 @@ curl -X POST http://localhost:8000/api/analyze \
     }
   ],
   "llm_flags": [],
-  "next_steps": [],
+  "next_steps": [
+    "Verify the sender's identity through official channels.",
+    "Do not click on any suspicious links."
+  ],
   "reported_scam": false,
   "reported_genuine": false,
   "created_at": "2026-10-12T08:41:00Z"
@@ -438,16 +454,16 @@ Pakka's visual identity uses a **dawn gradient palette** — deep navy through r
 ## 🗺️ Roadmap
 
 ### Current capabilities
-- Text, PDF, image (OCR), and URL input modes
+- Text, PDF, and URL input modes fully functional; Screenshot/Image mode wired via `pytesseract` (requires system-level Tesseract binary installation)
 - 12 deterministic fraud detectors (English, Hindi, Bengali)
-- Multiplicative trust score with hard floors
+- Multiplicative trust score with hard floor capping for fee requests and money forwarding
 - Community stats aggregation
-- Mock LLM mode (default, zero cost)
-- Gemini LLM stub (ready to wire up)
-- Full test suite (unit + integration)
+- Mock LLM mode (operational default with multilingual next steps)
+- Unit and integration tests (31 passed, 1 skipped when Tesseract is uninstalled)
 
-### Proposed future work
-- [ ] Wire Gemini structured-output LLM fully end-to-end
+### Known limitations & future work
+- [ ] **OCR Execution Prerequisite**: Screenshot/image OCR requires external Tesseract-OCR binary installed on host; skipped in test environments where binary is absent
+- [ ] **LLM Endpoint Wiring**: `/api/analyze` currently instantiates `MockLLMProvider()` directly; Gemini structured generation is implemented in `gemini.py` but not wired to runtime endpoint dispatch or tested live
 - [ ] Crowd-sourced blocklist for `community_reported` detector
 - [ ] Downloadable PDF report pack
 - [ ] Official portal deep-links (Ministry of Labour, cybercrime.gov.in) per verdict
